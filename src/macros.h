@@ -14,7 +14,7 @@
 #define HELP_TEXT "\n\
 Параметры коммандной строки:\n\
 \n\
-    ./gl_view [Параметры]\n\
+    ./XXX [Параметры]\n\
 \n\
 Параметры:\n\
 \n\
@@ -28,9 +28,9 @@
 \n\
 "
 
-#define PROFILE_DIRNAME     ".starwars_duel"
+#define PROFILE_DIRNAME     ".XXX"
 
-#define LOG_FILENAME        "/starwars_duel.log"
+#define LOG_FILENAME        "/XXX.log"
 
 #endif /*__MACROS_H*/
 
