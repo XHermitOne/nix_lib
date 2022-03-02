@@ -84,5 +84,5 @@ sllist.o: ./src/sllist.c
 
 
 clean:
-	rm -f ./src/*.o ./obj/*.o ./*.o gl_view test
+	rm -f ./src/*.o ./obj/*.o ./*.o test
 
