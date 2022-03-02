@@ -34,36 +34,60 @@
 
 #include "sllist.h"
 
+/**
+* Create new item
+* 
+*/
+nix_single_linked_list_t *create_single_linked_list_item(int tag, void *object, size_t size)
+{
+    nix_single_linked_list_t *new_item = NULL;
 
-int insert_single_linked_list_item(nix_single_linked_list_t **item, int tag, void *object, size_t size)
+    new_item = malloc(sizeof *new_item);
+    new_item ->next = NULL;
+
+    if (new_item != NULL)
+    {
+        new_item->tag = tag;
+        new_item->size = size;
+        new_item->object = malloc(size);
+
+        if (new_item->object != NULL)
+        {
+            memcpy(new_item->object, object, size);
+        }
+    }
+    return new_item;
+}
+
+int insert_single_linked_list_item(nix_single_linked_list_t *item, int tag, void *object, size_t size)
 {
     nix_single_linked_list_t *new_item = NULL;
     int result = SL_SUCCESS;
 
     assert(item != NULL);
 
-    if(size > 0)
+    if (size > 0)
     {
         new_item = malloc(sizeof *new_item);
-        if(new_item != NULL)
+        if (new_item != NULL)
         {
             new_item->tag = tag;
             new_item->size = size;
             new_item->object = malloc(size);
 
-            if(new_item->object != NULL)
+            if (new_item->object != NULL)
             {
                 memcpy(new_item->object, object, size);
                 /* Handle empty list */
-                if (*item == NULL)
+                if (item == NULL)
                 {
                     new_item->next = NULL;
-                    *item = new_item;
+                    item = new_item;
                 }
                 else /* Insert just after current item */
                 {
-                    new_item->next = (*item)->next;
-                    (*item)->next = new_item;
+                    new_item->next = item->next;
+                    item->next = new_item;
                 }
             }
             else
@@ -86,43 +110,43 @@ int insert_single_linked_list_item(nix_single_linked_list_t **item, int tag, voi
 }
 
 
-int add_first_single_linked_list_item(nix_single_linked_list_t **item, int tag, void *object, size_t size)
+// int add_first_single_linked_list_item(nix_single_linked_list_t *item, int tag, void *object, size_t size)
+// {
+//     int result = SL_SUCCESS;
+//     nix_single_linked_list_t *p = NULL;
+
+//     assert(item != NULL);
+
+//     result = insert_single_linked_list_item(p, tag, object, size);
+//     if (result == SL_SUCCESS)
+//     {
+//         p->next = item;
+//         item = p;
+//     }
+
+//     return result;
+// }
+
+
+int add_last_single_linked_list_item(nix_single_linked_list_t *item, int tag, void *object, size_t size)
 {
     int result = SL_SUCCESS;
-    nix_single_linked_list_t *p = NULL;
+    nix_single_linked_list_t *end_seeker = NULL;
 
     assert(item != NULL);
 
-    result = insert_single_linked_list_item(&p, tag, object, size);
-    if (result == SL_SUCCESS)
-    {
-        p->next = *item;
-        *item = p;
-    }
-
-    return result;
-}
-
-
-int add_last_single_linked_list_item(nix_single_linked_list_t **item, int tag, void *object, size_t size)
-{
-    int result = SL_SUCCESS;
-    nix_single_linked_list_t *end_seeker;
-
-    assert(item != NULL);
-
-    if (*item == NULL)
+    if (item == NULL)
     {
         result = insert_single_linked_list_item(item, tag, object, size);
     }
     else
     {
-        end_seeker = *item;
-        while(end_seeker->next != NULL)
+        end_seeker = item;
+        while (end_seeker->next != NULL)
         {
             end_seeker = end_seeker->next;
         }
-        result = insert_single_linked_list_item(&end_seeker, tag, object, size);
+        result = insert_single_linked_list_item(end_seeker, tag, object, size);
     }
 
     return result;
@@ -134,10 +158,10 @@ int update_single_linked_list_item(nix_single_linked_list_t *item, int new_tag, 
     int result = SL_SUCCESS;
     void *p;
   
-    if(new_size > 0)
+    if (new_size > 0)
     {
         p = realloc(item->object, new_size);
-        if(p != NULL)
+        if (p != NULL)
         {
             item->object = p;
             memmove(item->object, new_object, new_size);
@@ -162,13 +186,13 @@ void *get_data_single_linked_list_item(nix_single_linked_list_t *item, int *tag,
 {
     void *p = NULL;
 
-    if(item != NULL)
+    if (item != NULL)
     {
-        if(tag != NULL)
+        if (tag != NULL)
         {
             *tag = item->tag;
         }
-        if(size != NULL)
+        if (size != NULL)
         {
             *size = item->size;
         }
@@ -181,45 +205,53 @@ void *get_data_single_linked_list_item(nix_single_linked_list_t *item, int *tag,
 
 nix_single_linked_list_t *delete_single_linked_list_item(nix_single_linked_list_t *item)
 {
-  SLLIST *NextNode = NULL;
+    nix_single_linked_list_t *next = NULL;
 
-  if(Item != NULL)
-  {
-    NextNode = Item->Next;
-
-    if(Item->Object != NULL)
+    if (item != NULL)
     {
-      free(Item->Object);
-    }
-    free(Item);
-  }
+        next = item->next;
 
-  return NextNode;
+        if (item->object != NULL)
+        {
+            free(item->object);
+        }
+        free(item);
+    }
+
+  return next;
 }
 
 
-void delete_next_single_linked_list_item(nix_single_linked_list_t *item)
+BOOL delete_next_single_linked_list_item(nix_single_linked_list_t *item)
 {
-    if(item != NULL && item->next != NULL)
+    BOOL result = FALSE;
+
+    if ((item != NULL) && (item->next != NULL))
     {
         item->next = delete_single_linked_list_item(item->next);
+        result = TRUE;
     }
+    return result;
 }
 
 
-void destroy_single_linked_list(nix_single_linked_list_t **list)
+BOOL destroy_single_linked_list(nix_single_linked_list_t *list)
 {
-    nix_single_linked_list_t *next;
+    BOOL result;
+    nix_single_linked_list_t *next = NULL;
 
-    if(*list != NULL)
+    if (list != NULL)
     {
-        next = *list;
+        next = list;
         do
         {
             next = delete_single_linked_list_item(next);
         } while(next != NULL);
-        *list = NULL;
+
+        list = NULL;
+        result = TRUE;
     }
+    return result;
 }
 
 int walk_single_linked_list(nix_single_linked_list_t *list, int (*func)(int, void *, void *), void *args)
@@ -243,11 +275,44 @@ unsigned int get_count_single_linked_list(nix_single_linked_list_t *list)
     if (list != NULL)
     {
         ++items;
-        while ((next = get_next_single_linked_list_item(next)) != NULL)
+        while ((next = next->next) != NULL)
             ++items;
     }
 
     return items;
 }
+
+nix_single_linked_list_t *get_item_single_linked_list(nix_single_linked_list_t *list, unsigned int index)
+{
+    nix_single_linked_list_t *result = NULL;
+
+    if (index == 0)
+    {
+        result = list;
+    }
+    else
+        if (list != NULL)
+        {
+            result = get_item_single_linked_list(list->next, index - 1);
+        }
+
+    return result;
+}
+
+nix_single_linked_list_t *find_item_single_linked_list_by_tag(nix_single_linked_list_t *item, int tag)
+{
+    nix_single_linked_list_t *result = NULL;
+
+    if (item != NULL)
+    {
+        if (item->tag == tag)
+            result = item;
+        else
+            result = find_item_single_linked_list_by_tag(item->next, tag);
+    }
+
+    return result;
+}
+
 
 /* end of sllist.c */

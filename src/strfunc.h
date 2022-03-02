@@ -70,15 +70,16 @@ typedef struct
 char *str_replace_char_idx(char *str, unsigned int char_index, char new_char);
 
 /**
-*   Произвести замену в строке
+* Произвести замену в строке
 */
 char *create_str_replace(char *str, const char *from, const char *to);
 
 /**
-*   Произвести все замены в строке
+* Произвести все замены в строке
+* @param replaces Список замен. Должен заканчиваться структурой {search=NULL, replace=NULL}.
+* @return Возвращает новую строку с произведенными заменами.
 */
-
-char *create_str_replace_all(char *src, nix_search_replace_t *replaces);
+char *create_str_replace_all(char *src, const nix_search_replace_t *replaces);
 
 // ------------------ Функции работы с кодировками ---------------------------
 #define     DEFAULT_CODEPAGE    "UTF-8"     /* Кодовая страница, используемая по умолчанию */

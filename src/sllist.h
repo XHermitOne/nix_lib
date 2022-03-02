@@ -31,6 +31,8 @@
 #ifndef __SLLIST_H
 #define __SLLIST_H
 
+#include  "ext_types.h"
+
 #define SL_SUCCESS    0
 #define SL_NO_MEM     1
 #define SL_ZERO_SIZE  2
@@ -44,8 +46,16 @@ typedef struct
   size_t size;
 } nix_single_linked_list_t;
 
-/* Add new item immediately after current item */
-int insert_single_linked_list_item(nix_single_linked_list_t **item, int tag, void *object, size_t size);
+/**
+* Create new item
+* 
+*/
+nix_single_linked_list_t *create_single_linked_list_item(int tag, void *object, size_t size);
+
+/**
+ *  Add new item immediately after current item 
+ */
+int insert_single_linked_list_item(nix_single_linked_list_t *item, int tag, void *object, size_t size);
 
 /* 
 * Add item to front of list. Care: if you pass
@@ -60,10 +70,10 @@ int insert_single_linked_list_item(nix_single_linked_list_t **item, int tag, voi
 *
 * This would be a Bad Thing.
 */
-int add_first_single_linked_list_item(nix_single_linked_list_t **item, int tag, void *object, size_t size);
+// int add_first_single_linked_list_item(nix_single_linked_list_t *item, int tag, void *object, size_t size);
 
 /* Add new item right at the end of the list */
-int add_last_single_linked_list_item(nix_single_linked_list_t **item, int tag, void *object, size_t size);
+int add_last_single_linked_list_item(nix_single_linked_list_t *item, int tag, void *object, size_t size);
 
 /* Replace existing data */
 int update_single_linked_list_item(nix_single_linked_list_t *item, int new_tag, void *new_object, size_t new_size);
@@ -83,14 +93,32 @@ nix_single_linked_list_t *delete_single_linked_list_item(nix_single_linked_list_
 * the one passed in. List integrity
 * maintained automatically.
 */
-void delete_next_single_linked_list_item(nix_single_linked_list_t *item);
+BOOL delete_next_single_linked_list_item(nix_single_linked_list_t *item);
 
 /* Destroy the entire list */
-void destroy_single_linked_list(nix_single_linked_list_t **list);
+BOOL destroy_single_linked_list(nix_single_linked_list_t *list);
 
 /* Call func(Tag, ThisItem, Args) for each item */
 int walk_single_linked_list(nix_single_linked_list_t *list, int (*func)(int, void *, void *), void *args);
 
-unsigned int get_count_single_linked_list(nix_single_linked_list_t *list)
+unsigned int get_count_single_linked_list(nix_single_linked_list_t *list);
+
+/**
+ * Get the item single linked list by index
+ * 
+ * @param list 
+ * @param index 
+ * @return nix_single_linked_list_t* 
+ */
+nix_single_linked_list_t *get_item_single_linked_list(nix_single_linked_list_t *list, unsigned int index);
+
+/**
+ * Find the item single linked list by tag value
+ * 
+ * @param list 
+ * @param index 
+ * @return nix_single_linked_list_t* 
+ */
+nix_single_linked_list_t *find_item_single_linked_list_by_tag(nix_single_linked_list_t *item, int tag);
 
 #endif /*__SLLIST_H*/

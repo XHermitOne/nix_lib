@@ -185,15 +185,15 @@ char *create_str_replace(char *str, const char *from, const char *to)
 *   Произвести все замены в строке
 */
 
-char *create_str_replace_all(char *src, nix_search_replace_t *replaces)
+char *create_str_replace_all(char *src, const nix_search_replace_t *replaces)
 {
     char *ret = src;
     char *prev = NULL;
     int i = 0;
 
-    for(i = 0; replaces[i].search; i++)
+    for(i = 0; (replaces + i)->search; i++)
     {
-        ret = create_str_replace(ret, replaces[i].search, replaces[i].replace);
+        ret = create_str_replace(ret, (replaces + i)->search, (replaces + i)->replace);
         if (prev != NULL)
         {
             destroy_and_null_str(prev);

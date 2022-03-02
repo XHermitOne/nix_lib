@@ -19,6 +19,7 @@
 #include "filefunc.h"
 #include "logfunc.h"
 #include "strfunc.h"
+#include "sllist.h"
 
 /**
 * Режим отладки
@@ -133,7 +134,7 @@ BOOL test_is_str_empty()
 BOOL test_create_str_replace_all()
 {
     BOOL result;
-    nix_search_replace_t *replaces = (nix_search_replace_t *) calloc(3, sizeof(nix_search_replace_t));
+    nix_search_replace_t *replaces = (nix_search_replace_t *) calloc(4, sizeof(nix_search_replace_t));
     char *text = NULL;
 
     (*replaces).search = "lat";
@@ -142,6 +143,8 @@ BOOL test_create_str_replace_all()
     (*(replaces+1)).replace = "string";
     (*(replaces+2)).search = " ";
     (*(replaces+2)).replace = "___";
+    (*(replaces+3)).search = NULL;
+    (*(replaces+3)).replace = NULL;
 
     text = create_str_replace_all("latin text", replaces);
     print_color_txt(GREEN_COLOR_TEXT, "Произвести все замены в строке: <%s>\n", text);
@@ -254,8 +257,8 @@ BOOL test_create_str_clone()
 BOOL test_str_copy_limit()
 {
     BOOL result;
-    char *text_value = (char *)calloc(strlen("latin Text") + 1, sizeof(char));
-    char *text = (char *)calloc(strlen("latin") + 1, sizeof(char));
+    char *text_value = (char *) calloc(strlen("latin Text") + 1, sizeof(char));
+    char *text = (char *) calloc(strlen("latin") + 1, sizeof(char));
 
     strcpy(text_value, "latin Text");
 
@@ -268,7 +271,72 @@ BOOL test_str_copy_limit()
     destroy_and_null_str(text_value);
 
     return result;
+}
 
+BOOL test_sinle_linked_list()
+{
+    BOOL result;
+    BOOL result_step;
+
+    nix_single_linked_list_t *list = NULL;
+    nix_single_linked_list_t *item = NULL;
+
+    double item_value1 = 3.14; 
+    int item_value2 = 3; 
+    char *item_value3 = NULL; 
+    int error_insert = 0;
+
+    list = create_single_linked_list_item(0, &item_value1, sizeof(double));
+    result = (list != NULL);
+    print_test(result, "Создание односвязного списка");
+
+    error_insert = insert_single_linked_list_item(list, 0, &item_value2, sizeof(int));
+    result_step = (error_insert == SL_SUCCESS);
+    print_test(result_step, "[1] Добавление элемента односвязного списка");
+    result = (result && result_step);
+
+    error_insert = add_last_single_linked_list_item(list, 0, &item_value1, sizeof(double));
+    result_step = (error_insert == SL_SUCCESS);
+    print_test(result_step, "[2] Добавление последнего элемента односвязного списка");
+    result = (result && result_step);
+
+    item_value3 = (char *) calloc(strlen("latin Text") + 1, sizeof(char));
+    strcpy(item_value3, "latin Text");
+    error_insert = add_last_single_linked_list_item(list, 0, item_value3, (strlen(item_value3) + 1) * sizeof(char));
+    result_step = (error_insert == SL_SUCCESS);
+    print_test(result_step, "[3] Добавление последнего элемента односвязного списка");
+    result = (result && result_step);
+
+    error_insert = get_count_single_linked_list(list);
+    result_step = (error_insert == 4);
+    print_test(result_step, "Определение количества элементов односвязного списка [%d]", error_insert);
+    result = (result && result_step);
+
+    item = get_item_single_linked_list(list, 1);
+    result_step = (item != NULL);
+    print_test(result_step, "[1] Получение элемента односвязного списка");
+    result = (result && result_step);
+
+    result_step = ((*((int *) item->object)) == 3);
+    print_test(result_step, "[1] Получение значения элемента односвязного списка [%d]", (*((int *) item->object)));
+    result = (result && result_step);
+
+    item = get_item_single_linked_list(list, 3);
+    result_step = (item != NULL);
+    print_test(result_step, "[2] Получение элемента односвязного списка");
+    result = (result && result_step);
+
+    result_step = (strcmp(((char *) item->object), "latin Text") == 0);
+    print_test(result_step, "[2] Получение значения элемента односвязного списка [%s]", ((char *) item->object));
+    result = (result && result_step);
+
+    result_step = destroy_single_linked_list(list);
+    print_test(result_step, "Удаление односвязного списка");
+    result = (result && result_step);
+
+    destroy_and_null_str(item_value3);
+
+    return result;
 }
 
 int main(int argc, char **argv)
@@ -317,6 +385,9 @@ int main(int argc, char **argv)
 
     //Тестирование дополнительных функций
 
+
+    // Тестирование односвязного списка
+    test_sinle_linked_list();
 
     stop_seconds = time(NULL);
     print_color_txt(CYAN_COLOR_TEXT, "... Останов процедуры тестирования функций [%ld сек.]\n", stop_seconds - start_seconds);
