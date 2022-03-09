@@ -13,26 +13,60 @@
 nix_single_linked_list_index_array_t *create_single_linked_list_index_array(nix_single_linked_list_t *list)
 {
     nix_single_linked_list_index_array_t *index_array = NULL;
-    nix_single_linked_list_t *item = NULL;
-    int i;
+    // nix_single_linked_list_t *item = NULL;
+    // int i;
 
     if (list != NULL)
     {
         index_array = (nix_single_linked_list_index_array_t *) malloc(sizeof(nix_single_linked_list_index_array_t));
+        index_array->index = NULL;
+        index_array->count = 0;
         index_array->list = list;
-        index_array->count = get_count_single_linked_list(list);
-        index_array->index = (nix_single_linked_list_t**) malloc(sizeof(nix_single_linked_list_t*) * index_array->count);
-
-        item = list;
-        i = 0;
-        do
-        {
-            *(index_array->index + i) = item;
-            item = item->next;
-        } while (item != NULL);
+        reindex_single_linked_list_index_array(index_array);
     }
     
     return index_array;
+}
+
+/**
+ * Переиндексировать список
+ * 
+ */
+BOOL reindex_single_linked_list_index_array(nix_single_linked_list_index_array_t *index_array)
+{
+    BOOL result = FALSE;
+    nix_single_linked_list_t *item = NULL;
+    int i = 0;
+
+    if (index_array != NULL)
+    {
+        if (index_array->index != NULL)
+        {
+            free(index_array->index);
+            index_array->index = NULL;
+        }
+        if (index_array->list != NULL)
+        {
+            index_array->count = get_count_single_linked_list(index_array->list);
+            if (index_array->count)
+                index_array->index = (nix_single_linked_list_t**) malloc(sizeof(nix_single_linked_list_t*) * index_array->count);
+        }
+
+        if (index_array->index != NULL)
+        {
+            item = index_array->list;
+            i = 0;
+            do
+            {
+                *(index_array->index + i) = item;
+                item = item->next;
+            } while (item != NULL);
+        }
+
+        result = TRUE;
+    }
+
+    return result;
 }
 
 /**

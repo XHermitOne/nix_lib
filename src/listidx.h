@@ -27,6 +27,12 @@ typedef struct
 nix_single_linked_list_index_array_t *create_single_linked_list_index_array(nix_single_linked_list_t *list);
 
 /**
+ * Переиндексировать список
+ * 
+ */
+BOOL reindex_single_linked_list_index_array(nix_single_linked_list_index_array_t *index_array);
+
+/**
  * Удалить массив индекса для односвязного списка.
  */
 BOOL destroy_single_linked_list_index_array(nix_single_linked_list_index_array_t *index_array, BOOL delete_list);
