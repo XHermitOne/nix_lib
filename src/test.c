@@ -20,6 +20,7 @@
 #include "logfunc.h"
 #include "strfunc.h"
 #include "sllist.h"
+#include "listidx.h"
 
 /**
 * Режим отладки
@@ -273,7 +274,7 @@ BOOL test_str_copy_limit()
     return result;
 }
 
-BOOL test_sinle_linked_list()
+BOOL test_single_linked_list()
 {
     BOOL result;
     BOOL result_step;
@@ -312,7 +313,7 @@ BOOL test_sinle_linked_list()
     print_test(result_step, "Определение количества элементов односвязного списка [%d]", error_insert);
     result = (result && result_step);
 
-    item = get_item_single_linked_list(list, 1);
+    item = get_single_linked_list_item(list, 1);
     result_step = (item != NULL);
     print_test(result_step, "[1] Получение элемента односвязного списка");
     result = (result && result_step);
@@ -321,7 +322,7 @@ BOOL test_sinle_linked_list()
     print_test(result_step, "[1] Получение значения элемента односвязного списка [%d]", (*((int *) item->object)));
     result = (result && result_step);
 
-    item = get_item_single_linked_list(list, 3);
+    item = get_single_linked_list_item(list, 3);
     result_step = (item != NULL);
     print_test(result_step, "[2] Получение элемента односвязного списка");
     result = (result && result_step);
@@ -335,6 +336,39 @@ BOOL test_sinle_linked_list()
     result = (result && result_step);
 
     destroy_and_null_str(item_value3);
+
+    return result;
+}
+
+BOOL test_single_linked_list_index_array()
+{
+    BOOL result = TRUE;
+    BOOL result_step = TRUE;
+
+    nix_single_linked_list_t *list = NULL;
+    nix_single_linked_list_t *item = NULL;
+    double item_value1 = 3.14; 
+
+    nix_single_linked_list_index_array_t *index_array = NULL;
+
+    list = create_single_linked_list_item(0, &item_value1, sizeof(double));
+    result_step = (list != NULL);
+    print_test(result_step, "[1] Создание односвязного списка");
+    result = (result && result_step);
+
+    index_array = create_single_linked_list_index_array(list);
+    result_step = (index_array != NULL);
+    print_test(result_step, "[1] Создание индексированного односвязного списка");
+    result = (result && result_step);
+
+    item = get_single_linked_list_index_array_item(index_array, 0);
+    result_step = ((*((double *)item->object)) == item_value1);
+    print_test(result_step, "[1] Получение элемента односвязного списка по индексу [%f]", (*((double *)item->object)));
+    result = (result && result_step);
+
+    result_step = destroy_single_linked_list_index_array(index_array, TRUE);
+    print_test(result_step, "[1] Удаление индексированного односвязного списка");
+    result = (result && result_step);
 
     return result;
 }
@@ -387,7 +421,10 @@ int main(int argc, char **argv)
 
 
     // Тестирование односвязного списка
-    test_sinle_linked_list();
+    test_single_linked_list();
+
+    // Тестирование индексированного односвязного списка
+    test_single_linked_list_index_array();
 
     stop_seconds = time(NULL);
     print_color_txt(CYAN_COLOR_TEXT, "... Останов процедуры тестирования функций [%ld сек.]\n", stop_seconds - start_seconds);

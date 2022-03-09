@@ -82,16 +82,16 @@ char *get_ini_parameter_value_as_string(const char *ini_filename, const char *se
 	return retp;
 }
 
-static BOOL has_ini_section(FILE *fp, const char *sect)
+static BOOL has_ini_section(FILE *ini_file, const char *section_name)
 {
 	char line[MAXLINE];
-	int len = strlen(sect);
+	int len = strlen(section_name);
 
-	while(fgets(line, MAXLINE, fp) != NULL)
+	while(fgets(line, MAXLINE, ini_file) != NULL)
 	{
 		if(*line != '[')
 			continue;
-		if(strncmp(&line[1], sect, len) == 0 &&	line[1+len] == ']')
+		if(strncmp(&line[1], section_name, len) == 0 &&	line[1+len] == ']')
 		return TRUE;	/* found it */
 	}
 

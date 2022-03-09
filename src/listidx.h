@@ -8,9 +8,11 @@
 #ifndef __LISTIDX_H 
 #define __LISTIDX_H
 
+#include <stdio.h>
+
 #include "ext_types.h"
 #include "sllist.h"
-#include "dllist.h"
+// #include "dllist.h"
 
 typedef struct
 {
@@ -22,7 +24,7 @@ typedef struct
 /**
 * Создать массив индекса для односвязного списка.
 */
-BOOL create_single_linked_list_index_array(nix_single_linked_list_t *list, nix_single_linked_list_index_array_t *index_array);
+nix_single_linked_list_index_array_t *create_single_linked_list_index_array(nix_single_linked_list_t *list);
 
 /**
  * Удалить массив индекса для односвязного списка.
@@ -32,28 +34,31 @@ BOOL destroy_single_linked_list_index_array(nix_single_linked_list_index_array_t
 /**
  * Получить элемент списка по индексу через массив индекса.
  */
-nix_single_linked_list_t *get_single_linked_list_item(const nix_single_linked_list_index_array_t *index_array, unsigned int index);
-
-typedef struct
-{
-    unsigned int count;
-    struct nix_double_linked_list_t *list;
-    struct nix_double_linked_list_t **index;
-} nix_double_linked_list_index_array_t;
+nix_single_linked_list_t *get_single_linked_list_index_array_item(const nix_single_linked_list_index_array_t *index_array, unsigned int index);
 
 /**
- * Создать массив индекса для двухсвязного списка.
+ * Удалить элемент из списка по индексу.
+ * 
  */
-BOOL create_double_linked_list_index_array(nix_double_linked_list_t *list, nix_double_linked_list_index_array_t **index);
+nix_single_linked_list_t *remove_single_linked_list_index_array_item(nix_single_linked_list_index_array_t *index_array, unsigned int index);
 
 /**
- * Удалить массив индекса для двухсвязного списка.
+ * Удалить элемент списка по индексу.
+ * 
  */
-BOOL destroy_double_linked_list_index_array(nix_double_linked_list_index_array_t *index_array, BOOL delete_list);
+BOOL delete_single_linked_list_index_array_item(nix_single_linked_list_index_array_t *index_array, unsigned int index);
 
 /**
- * Получить элемент списка по индексу через массив индекса.
+ * Вставить элемент в список по индексу.
+ * 
  */
-nix_double_linked_list_t *get_double_linked_list_item(const nix_double_linked_list_index_array_t *index_array, unsigned int index);
+BOOL insert_single_linked_list_index_array_item(nix_single_linked_list_index_array_t *index_array, unsigned int index, nix_single_linked_list_t *item);
+
+
+/**
+ * Добавить в конец списка элемент.
+ * @return: Индекс добавленного элемента или -1 в случае ошибки
+ */
+int append_single_linked_list_index_array_item(nix_single_linked_list_index_array_t *index_array, nix_single_linked_list_t *item);
 
 #endif /* __LISTIDX_H */

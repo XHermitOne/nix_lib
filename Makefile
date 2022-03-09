@@ -47,8 +47,8 @@ SRCDIR    = .
 
 
 # ВНИМАНИЕ! Сначала ставиться -o <выходной файл> затем <объектные файлы> и лишь в конце <флаги линковщика>
-test: test.o version.o logfunc.o strfunc.o toolfunc.o filefunc.o sllist.o
-	$(CC) -o test ./obj/test.o ./obj/version.o ./obj/logfunc.o ./obj/strfunc.o ./obj/toolfunc.o ./obj/filefunc.o ./obj/sllist.o $(LDFLAGS)
+test: test.o version.o logfunc.o strfunc.o toolfunc.o filefunc.o sllist.o listidx.o
+	$(CC) -o test ./obj/test.o ./obj/version.o ./obj/logfunc.o ./obj/strfunc.o ./obj/toolfunc.o ./obj/filefunc.o ./obj/sllist.o ./obj/listidx.o $(LDFLAGS)
 
 main.o: ./src/main.c
 	$(CC) -c  $(CFLAGS) $(CPPFLAGS) ./src/main.c
@@ -81,6 +81,10 @@ filefunc.o: ./src/filefunc.c
 sllist.o: ./src/sllist.c
 	$(CC) -c  $(CFLAGS) $(CPPFLAGS) ./src/sllist.c
 	mv sllist.o ./obj/sllist.o
+
+listidx.o: ./src/listidx.c
+	$(CC) -c  $(CFLAGS) $(CPPFLAGS) ./src/listidx.c
+	mv listidx.o ./obj/listidx.o
 
 
 clean:

@@ -1,43 +1,13 @@
-/*  sllist.c - source for single linked list lib
- *
- *  SLLIST - Single-Linked List Library
- *
- *  Copyright (C) 2000  Richard Heathfield
- *                      Eton Computer Systems Ltd
- *                      Macmillan Computer Publishing
- *
- *  This program is free software; you can redistribute it
- *  and/or modify it under the terms of the GNU General
- *  Public License as published by the Free Software
- *  Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will
- *  be useful, but WITHOUT ANY WARRANTY; without even the
- *  implied warranty of MERCHANTABILITY or FITNESS FOR A
- *  PARTICULAR PURPOSE.  See the GNU General Public License
- *  for more details.
- *
- *  You should have received a copy of the GNU General
- *  Public License along with this program; if not, write
- *  to the Free Software Foundation, Inc., 675 Mass Ave,
- *  Cambridge, MA 02139, USA.
- *
- *  Richard Heathfield may be contacted by email at:
- *     binary@eton.powernet.co.uk
- *
+/**  
+ *  Библиотека односвязного списка
+ *  Оригинальный текст взят из книги 
+ *  Хэзфилд Р., Кирби Л. - Искусство программирования на C - 2001
+ *  Но далее модифицирован и дополнен.
+ *  @version 0.0.2.1
  */
-
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
 
 #include "sllist.h"
 
-/**
-* Create new item
-* 
-*/
 nix_single_linked_list_t *create_single_linked_list_item(int tag, void *object, size_t size)
 {
     nix_single_linked_list_t *new_item = NULL;
@@ -108,24 +78,6 @@ int insert_single_linked_list_item(nix_single_linked_list_t *item, int tag, void
 
     return result;
 }
-
-
-// int add_first_single_linked_list_item(nix_single_linked_list_t *item, int tag, void *object, size_t size)
-// {
-//     int result = SL_SUCCESS;
-//     nix_single_linked_list_t *p = NULL;
-
-//     assert(item != NULL);
-
-//     result = insert_single_linked_list_item(p, tag, object, size);
-//     if (result == SL_SUCCESS)
-//     {
-//         p->next = item;
-//         item = p;
-//     }
-
-//     return result;
-// }
 
 
 int add_last_single_linked_list_item(nix_single_linked_list_t *item, int tag, void *object, size_t size)
@@ -221,6 +173,22 @@ nix_single_linked_list_t *delete_single_linked_list_item(nix_single_linked_list_
   return next;
 }
 
+nix_single_linked_list_t *remove_single_linked_list_item(nix_single_linked_list_t *list, unsigned int index)
+{
+    nix_single_linked_list_t *item = list;
+    nix_single_linked_list_t *prev = list;
+
+    while ((item != NULL) && (index > 0))
+    {
+        prev = item;
+        item = item->next;
+        index--;
+    }
+    prev->next = item->next;
+    item->next = NULL;
+    return item;
+}
+
 
 BOOL delete_next_single_linked_list_item(nix_single_linked_list_t *item)
 {
@@ -282,7 +250,7 @@ unsigned int get_count_single_linked_list(nix_single_linked_list_t *list)
     return items;
 }
 
-nix_single_linked_list_t *get_item_single_linked_list(nix_single_linked_list_t *list, unsigned int index)
+nix_single_linked_list_t *get_single_linked_list_item(nix_single_linked_list_t *list, unsigned int index)
 {
     nix_single_linked_list_t *result = NULL;
 
@@ -293,8 +261,21 @@ nix_single_linked_list_t *get_item_single_linked_list(nix_single_linked_list_t *
     else
         if (list != NULL)
         {
-            result = get_item_single_linked_list(list->next, index - 1);
+            result = get_single_linked_list_item(list->next, index - 1);
         }
+
+    return result;
+}
+
+nix_single_linked_list_t *get_single_linked_list_last_item(nix_single_linked_list_t *list)
+{
+    nix_single_linked_list_t *result = NULL;
+
+    if (list != NULL)
+        if (list->next == NULL)
+            result = list;
+        else
+            result = get_single_linked_list_last_item(list->next);
 
     return result;
 }

@@ -1,35 +1,17 @@
-/*  sllist.h - header for single linked list lib
- *
- *  SLLIST - Single-Linked List Library
- *
- *  Copyright (C) 2000  Richard Heathfield
- *                      Eton Computer Systems Ltd
- *                      Macmillan Computer Publishing
- *
- *  This program is free software; you can redistribute it
- *  and/or modify it under the terms of the GNU General
- *  Public License as published by the Free Software
- *  Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will
- *  be useful, but WITHOUT ANY WARRANTY; without even the
- *  implied warranty of MERCHANTABILITY or FITNESS FOR A
- *  PARTICULAR PURPOSE.  See the GNU General Public License
- *  for more details.
- *
- *  You should have received a copy of the GNU General
- *  Public License along with this program; if not, write
- *  to the Free Software Foundation, Inc., 675 Mass Ave,
- *  Cambridge, MA 02139, USA.
- *
- *  Richard Heathfield may be contacted by email at:
- *     binary@eton.powernet.co.uk
- *
+/**  
+ *  Библиотека односвязного списка
+ *  Оригинальный текст взят из книги 
+ *  Хэзфилд Р., Кирби Л. - Искусство программирования на C - 2001
+ *  Но далее модифицирован и дополнен.
+ *  @version 0.0.2.1
  */
 
 #ifndef __SLLIST_H
 #define __SLLIST_H
+
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
 
 #include  "ext_types.h"
 
@@ -47,77 +29,92 @@ typedef struct
 } nix_single_linked_list_t;
 
 /**
-* Create new item
+* Создать новый элемент списка.
 * 
 */
 nix_single_linked_list_t *create_single_linked_list_item(int tag, void *object, size_t size);
 
 /**
- *  Add new item immediately after current item 
+ *  Добавить новый элемент списка после указанного
  */
 int insert_single_linked_list_item(nix_single_linked_list_t *item, int tag, void *object, size_t size);
 
-/* 
-* Add item to front of list. Care: if you pass
-* this function any node other than the first,
-* you will get Y-branches in your list:
-*
-*    oldroot-->-
-*               \  
-*                >->-passeditem-->-->--oldnext
-*               /
-*    newitem-->-
-*
-* This would be a Bad Thing.
-*/
-// int add_first_single_linked_list_item(nix_single_linked_list_t *item, int tag, void *object, size_t size);
-
-/* Add new item right at the end of the list */
+/**
+ *  Добавить новый элемент в конец списка
+ */
 int add_last_single_linked_list_item(nix_single_linked_list_t *item, int tag, void *object, size_t size);
 
-/* Replace existing data */
+/** 
+ *  Заменить существующие данные элемента списка
+ */
 int update_single_linked_list_item(nix_single_linked_list_t *item, int new_tag, void *new_object, size_t new_size);
 
-/* Retrieve data from this node */
+/** 
+*   Получить данные элемента списка 
+*/
 void *get_data_single_linked_list_item(nix_single_linked_list_t *item, int *tag, size_t *size);
 
 /** 
-* Delete this item. Returns pointer to
-* next item - caller's responsibility
-* to maintain list integrity.
+*   Удалить элемент списка
+*   @return: Функция возвращает указатель на следующий элемент списка
 */
 nix_single_linked_list_t *delete_single_linked_list_item(nix_single_linked_list_t *item);
 
+/**
+ * Удалить элемент из списка по индексу.
+ * 
+ * @param list Коренвой элемент списка.
+ * @param index Индекс элемента списка.
+ * @return nix_single_linked_list_t* 
+ */
+nix_single_linked_list_t *remove_single_linked_list_item(nix_single_linked_list_t *list, unsigned int index);
+
 /** 
-* Delete item immediately following
-* the one passed in. List integrity
-* maintained automatically.
+*   Удалить следующий элемент за указанным
 */
 BOOL delete_next_single_linked_list_item(nix_single_linked_list_t *item);
 
-/* Destroy the entire list */
+/** 
+ *    Удалить список из памяти
+ */
 BOOL destroy_single_linked_list(nix_single_linked_list_t *list);
 
-/* Call func(Tag, ThisItem, Args) for each item */
+/* 
+*   Выполнить функцию func(Tag, ThisItem, Args) для каждого элемента cgbcrf
+*/
 int walk_single_linked_list(nix_single_linked_list_t *list, int (*func)(int, void *, void *), void *args);
 
+/**
+ *    Получить количество элементов списка
+ * 
+ * @param list Указатель на корневой элемент списка
+ * @return unsigned int   Количество элементов списка
+ */
 unsigned int get_count_single_linked_list(nix_single_linked_list_t *list);
 
 /**
- * Get the item single linked list by index
+ *  Получить элемент списка по индексу
  * 
- * @param list 
- * @param index 
- * @return nix_single_linked_list_t* 
+ * @param list Корневой элемент списка
+ * @param index Запрашиваемый индекс
+ * @return nix_single_linked_list_t* Элемент списка или NULL  в случае ошибки
  */
-nix_single_linked_list_t *get_item_single_linked_list(nix_single_linked_list_t *list, unsigned int index);
+nix_single_linked_list_t *get_single_linked_list_item(nix_single_linked_list_t *list, unsigned int index);
 
 /**
- * Find the item single linked list by tag value
+ * Получить последний элемент списка
  * 
- * @param list 
- * @param index 
- * @return nix_single_linked_list_t* 
+ * @param list Корневой элемент списка
+ * @return nix_single_linked_list_t*  Последний элемент списка.
+ */
+nix_single_linked_list_t *get_single_linked_list_last_item(nix_single_linked_list_t *list);
+
+/**
+ * Найти элемент списка по значению тега
+ * 
+ * @param item Элемент списка начала поиска
+ * @param tag Значение тега
+ * @return nix_single_linked_list_t* Элемент списка или NULL если такой элемент не найден
  */
 nix_single_linked_list_t *find_item_single_linked_list_by_tag(nix_single_linked_list_t *item, int tag);
 
