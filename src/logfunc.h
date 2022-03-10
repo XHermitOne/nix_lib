@@ -2,7 +2,7 @@
  * Модуль функций записи в лог
  * @author XHermit <xhermitone@gmail.com>
  * @file
- * @version 0.0.4.1
+ * @version 0.0.4.2
  */
 
 #ifndef __LOGFUNC_H 

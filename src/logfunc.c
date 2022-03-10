@@ -2,7 +2,7 @@
  * Модуль функций записи в лог
  * @author XHermit <xhermitone@gmail.com>
  * @file
- * @version 0.0.4.1
+ * @version 0.0.4.2
  */
 
 #include "logfunc.h"
@@ -160,29 +160,30 @@ BOOL log_warning(char *fmt, ...)
 
 BOOL print_log_color_line(unsigned int color, char *fmt, ...)
 {
+    va_list argptr;
+    va_start(argptr, fmt);
+
+    char msg[MAX_LOG_MSG];
+    vsnprintf(msg, sizeof(msg), fmt, argptr);
+    va_end(argptr);
+
+    // Сигнатуру сообщения определяем по цвету
+    char signature[10];
+    if (color == CYAN_COLOR_TEXT)
+        strcpy(signature, "DEBUG:");
+    else if (color == RED_COLOR_TEXT)
+        strcpy(signature, "ERROR:");
+    else if (color == YELLOW_COLOR_TEXT)
+        strcpy(signature, "WARNING:");
+    else
+        strcpy(signature, "");
+
+    print_color_txt(color, "%s %s %s\n", get_current_datetime(), signature, msg);
+    print_color_txt(NORMAL_COLOR_TEXT, "");
+
     if (Log.out)
     {
-        va_list argptr;
-        va_start(argptr, fmt);
-
-        char msg[MAX_LOG_MSG];
-        vsnprintf(msg, sizeof(msg), fmt, argptr);
-        va_end(argptr);
-
-        // Сигнатуру сообщения определяем по цвету
-        char signature[10];
-        if (color == CYAN_COLOR_TEXT)
-            strcpy(signature, "DEBUG:");
-        else if (color == RED_COLOR_TEXT)
-            strcpy(signature, "ERROR:");
-        else if (color == YELLOW_COLOR_TEXT)
-            strcpy(signature, "WARNING:");
-        else
-            strcpy(signature, "");
-
         fprintf(Log.out, "    %s %s %s\n", get_current_datetime(), signature, msg);
-        print_color_txt(color, "%s %s %s\n", get_current_datetime(), signature, msg);
-        print_color_txt(NORMAL_COLOR_TEXT, "");
         fflush(Log.out);
         return TRUE;
     }
