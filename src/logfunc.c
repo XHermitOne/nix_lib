@@ -2,20 +2,10 @@
  * Модуль функций записи в лог
  * @author XHermit <xhermitone@gmail.com>
  * @file
- * @version 0.0.3.1
+ * @version 0.0.4.1
  */
 
-#include <stdio.h>
-#include <time.h>
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "macros.h"
-#include "toolfunc.h"
 #include "logfunc.h"
-#include "strfunc.h"
-#include "filefunc.h"
 
 static nix_log_t Log;
 

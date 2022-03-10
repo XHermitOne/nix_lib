@@ -274,6 +274,45 @@ BOOL test_str_copy_limit()
     return result;
 }
 
+BOOL test_create_str_parse_char_split()
+{
+    BOOL result = TRUE;
+    char *text_value = (char *) calloc(strlen("TEXT1 XXX GGGG 00000") + 1, sizeof(char));
+    char *text = NULL;
+
+    strcpy(text_value, "TEXT1 XXX GGGG 00000");
+
+    text = create_str_parse_char_split(text_value, ' ', 0);
+    print_color_txt(GREEN_COLOR_TEXT, "Парсинг строки с разделителем: <%s>\n", text);
+    result = result && (strcmp(text, "TEXT1") == 0);
+    print_test(result, "[1] Парсинг строки с разделителем");
+    destroy_and_null_str(text);
+
+    text = create_str_parse_char_split(text_value, ' ', 2);
+    print_color_txt(GREEN_COLOR_TEXT, "Парсинг строки с разделителем: <%s>\n", text);
+    result = result && (strcmp(text, "GGGG") == 0);
+    print_test(result, "[2] Парсинг строки с разделителем");
+    destroy_and_null_str(text);
+
+    text = create_str_parse_char_split(text_value, ' ', 3);
+    print_color_txt(GREEN_COLOR_TEXT, "Парсинг строки с разделителем: <%s>\n", text);
+    result = result && (strcmp(text, "00000") == 0);
+    print_test(result, "[3] Парсинг строки с разделителем");
+    destroy_and_null_str(text);
+
+    text = create_str_parse_char_split(text_value, ' ', 4);
+    result = result && (text == NULL);
+    print_test(result, "[4] Парсинг строки с разделителем");
+
+    text = create_str_parse_char_split(text_value, ' ', 10);
+    result = result && (text == NULL);
+    print_test(result, "[5] Парсинг строки с разделителем");
+
+    destroy_and_null_str(text_value);
+
+    return result;
+}
+
 BOOL test_single_linked_list()
 {
     BOOL result;
@@ -395,6 +434,11 @@ int main(int argc, char **argv)
     print_color_txt(GREEN_COLOR_TEXT, "Директория профиля: %s\n", profile_path);
     print_test(profile_path != NULL, "Получить путь к директории профиля");
 
+    char *path = create_basename("/home/user/temp/filename.xxx");
+    print_color_txt(GREEN_COLOR_TEXT, "Базовое имя файла: %s\n", path);
+    print_test(strcmp(path, "filename.xxx") == 0, "Получить базовое имя файла");
+    destroy_and_null_str(path);
+
     //Тестирование функций логирования
     nix_log_t *log = open_log(NULL);
     print_test(log != NULL, "Открытие лога");
@@ -416,6 +460,7 @@ int main(int argc, char **argv)
     test_create_str_end();
     test_create_str_clone();
     test_str_copy_limit();
+    test_create_str_parse_char_split();
 
     //Тестирование дополнительных функций
 

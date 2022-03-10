@@ -2,7 +2,7 @@
  * Модуль функций работы со строками
  * @author XHermit <xhermitone@gmail.com>
  * @file
- * @version 0.0.2.1
+ * @version 0.0.3.2
  */
 
 #ifndef __STRFUNC_H 
@@ -154,5 +154,13 @@ char *create_str_clone(const char *str);
  * 
  */
 BOOL str_copy_limit(const char *src_str, char *dst_str, unsigned int max_len);
+
+/**
+ * Парсинг строки с разделителем. Функция создает новую строку по индексу элемента.
+ * Элементы разделены символом. Если индекс выходит за рамки вожможных значений, то возвращается NULL.
+ * 
+ */
+char *create_str_parse_char_split(const char *str, char delimeter, unsigned int index);
+
 
 #endif /*__STRFUNC_H*/

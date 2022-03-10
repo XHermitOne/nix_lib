@@ -2,7 +2,7 @@
  * Модуль функций работы с файлами
  * @author XHermit <xhermitone@gmail.com>
  * @file
- * @version 0.0.0.1
+ * @version 0.0.1.1
  */
 
 #ifndef __FILEFUNC_H
@@ -50,5 +50,11 @@ BOOL is_same_file(const char *filename1, const char *filename2);
  * Путь к папке профиля
  */
 char *get_profile_path(void);
+
+/**
+ * Базовое имя файла/папки
+ * 
+ */
+char *create_basename(char *path);
 
 #endif /*__FILEFUNC_H*/

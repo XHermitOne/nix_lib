@@ -2,7 +2,7 @@
  * Модуль сервисных функций
  * @author XHermit <xhermitone@gmail.com>
  * @file
- * @version 0.0.2.1
+ * @version 0.0.3.2
  */
 
 #include <stdio.h>
@@ -448,4 +448,42 @@ BOOL str_copy_limit(const char *src_str, char *dst_str, unsigned int max_len)
         return TRUE;
     }
     return FALSE;
+}
+
+/**
+ * Парсинг строки с разделителем. Функция создает новую строку по индексу элемента.
+ * Элементы разделены символом. Если индекс выходит за рамки вожможных значений, то возвращается NULL.
+ * 
+ */
+char *create_str_parse_char_split(const char *str, char delimeter, unsigned int index)
+{
+    char *result = NULL;
+    unsigned int len = 0;
+    unsigned int idx = 0;
+    unsigned int start_pos = 0;
+    unsigned int stop_pos = 0;
+
+    if (str != NULL)
+    {
+        len = strlen(str);
+        for (stop_pos = 0; stop_pos < len; stop_pos++)
+        {
+            if (str[stop_pos] == delimeter)
+            {
+                if (idx == index)
+                {
+                    result = create_substr(str, start_pos, stop_pos - start_pos);
+                    break;
+                }
+                else
+                {
+                    start_pos = stop_pos + 1;
+                    idx++;
+                }
+            }
+        }
+        if ((stop_pos == len) && (idx == index))
+            result = create_substr(str, start_pos, len - start_pos);
+    }
+    return result;
 }

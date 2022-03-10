@@ -2,13 +2,23 @@
  * Модуль функций записи в лог
  * @author XHermit <xhermitone@gmail.com>
  * @file
- * @version 0.0.2.1
+ * @version 0.0.4.1
  */
 
 #ifndef __LOGFUNC_H 
 #define __LOGFUNC_H
 
+#include <stdio.h>
+#include <time.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "ext_types.h"
+#include "macros.h"
+#include "toolfunc.h"
+#include "strfunc.h"
+#include "filefunc.h"
 
 #define MAX_LOG_MSG 1024
 

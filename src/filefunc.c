@@ -2,7 +2,7 @@
  * Модуль функций работы с файлами
  * @author XHermit <xhermitone@gmail.com>
  * @file
- * @version 0.0.0.1
+ * @version 0.0.1.1
  */
 
 #include "filefunc.h"
@@ -249,7 +249,7 @@ BOOL is_same_file(const char *filename1, const char *filename2)
 }
 
 
-char ProfilePath[] = PROFILE_DIRNAME; /**Папка профиля программы*/
+char ProfilePath[] = PROFILE_DIRNAME;   /** Папка профиля программы */
 
 static BOOL create_profile_path(char *path);
 
@@ -294,5 +294,23 @@ static BOOL create_profile_path(char *path)
     if (do_free)
         free(profile_path);
 
+    return result;
+}
+
+/**
+ * Базовое имя файла/папки
+ * 
+ */
+char *create_basename(char *path)
+{
+    char *basename = NULL;
+    char *result = NULL;
+
+    if (!is_str_empty(path))
+    {
+        basename = strrchr(path, '/') + 1;
+        result = (char *) malloc((strlen(basename) + 1) * sizeof(char));
+        strcpy(result, basename);
+    }
     return result;
 }
